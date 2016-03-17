@@ -2,9 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Class that holds a digital picture and displays it.
+ * Class that holds a digital picture and displays it using a JFrame
  * 
- * Copyright Georgia Institute of Technology 2004
  * @author Barb Ericson 
  */
 public class PictureFrame
@@ -12,24 +11,16 @@ public class PictureFrame
   
   ////////////////// fields ////////////////////////////
   
-  /**
-   * Main window used as the frame
-   */
+  /** Main window used as the frame */
   JFrame frame = new JFrame();
   
-  /**
-   * ImageIcon used to display the picture in the label
-   */
+  /** ImageIcon used to display the picture in the label*/
   ImageIcon imageIcon = new ImageIcon();
   
-  /**
-   * Label used to display the picture
-   */
+  /** Label used to display the picture */
   private JLabel label = new JLabel(imageIcon);
   
-  /**
-   * Digital Picture to display
-   */
+  /** Digital Picture to display */
   private DigitalPicture picture;
   
   ///////////////// constructors ////////////////////////

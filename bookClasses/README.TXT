@@ -1,0 +1,1 @@
+The canvas had to be large so the image could fit. 
