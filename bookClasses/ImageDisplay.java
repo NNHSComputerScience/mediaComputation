@@ -5,17 +5,20 @@ import java.awt.image.*;
 /**
  * Class to display an image and the current location with a + sign
  * 
- * Copyright Georgia Institute of Technology 2004
  * @author Barb Ericson ericson@cc.gatech.edu
  */
 public class ImageDisplay extends JPanel implements Scrollable
 {
   
   /////////////////////////// fields (attributes ///////////////////////////
-  private Image image;         // the image to draw
-  private Dimension prefSize;  // the preferred size of the display
-  private int currentX = 0;    // the current x index 
-  private int currentY = 0;    // the current y index
+  /** the image to draw */
+  private Image image;         
+  /** the preferred size of the display */
+  private Dimension prefSize;  
+  /** the current x index */
+  private int currentX = 0;    
+  /** the current y index */
+  private int currentY = 0;    
   
   //////////////////////////// constructors /////////////////////////////////
   
@@ -124,8 +127,8 @@ public class ImageDisplay extends JPanel implements Scrollable
    * @return the block increment for clicking in scroll area
    */
   public int getScrollableBlockIncrement(Rectangle visibleRect, 
-                                        int orientation, 
-                                        int direction)
+                                         int orientation, 
+                                         int direction)
   {
     return 10;
   }
@@ -139,7 +142,7 @@ public class ImageDisplay extends JPanel implements Scrollable
   
   /**
    * Method to check if the viewport height is the source height
-   * @return true if viewport and soure have same height
+   * @return true if viewport and source have same height
    */
   public boolean getScrollableTracksViewportHeight()
   { return false; }
@@ -206,9 +209,8 @@ public class ImageDisplay extends JPanel implements Scrollable
         g.drawLine(xStart,downY,leftX,downY);
       if (leftX >= 0 && downY <= yEnd)
         g.drawLine(leftX,downY,leftX,yEnd);
-       
+      
     }
   }
-  
   
 }

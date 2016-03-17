@@ -1,12 +1,14 @@
 import java.awt.Color;
 
 /**
- * Class that references a pixel in a picture. A pixel has an x and y
- * location in a picture.  A pixel knows how to get and set the red, 
- * green, blue, and alpha values in the picture.  A pixel also knows
- * how to get and set the color using a Color object.
+ * Class that references a pixel in a picture. Pixel 
+ * stands for picture element where picture is 
+ * abbreviated pix.  A pixel has a column (x) and 
+ * row (y) location in a picture.  A pixel knows how 
+ * to get and set the red, green, blue, and alpha 
+ * values in the picture.  A pixel also knows how to get 
+ * and set the color using a Color object.
  * 
- * Copyright Georgia Institute of Technology 2004
  * @author Barb Ericson ericson@cc.gatech.edu
  */
 public class Pixel
@@ -17,16 +19,16 @@ public class Pixel
   /** the digital picture this pixel belongs to */
   private DigitalPicture picture;
   
-  /** the x location of this pixel in the picture (0,0) is top left */
+  /** the x (column) location of this pixel in the picture; (0,0) is top left */
   private int x; 
   
-  /** the y location of this pixel in the picture (0,0) is top left */
+  /** the y (row) location of this pixel in the picture; (0,0) is top left */
   private int y; 
   
   ////////////////////// constructors /////////////////////////////////
   
   /** 
-   * A constructor that take the x and y location for the pixel and
+   * A constructor that takes the x and y location for the pixel and
    * the picture the pixel is coming from
    * @param picture the picture that the pixel is in
    * @param x the x location of the pixel in the picture
@@ -58,6 +60,18 @@ public class Pixel
    * @return the y location of the pixel in the picture
    */
   public int getY() { return y; }
+  
+  /** 
+   * Method to get the row (y value)
+   * @return the row (y value) of the pixel in the picture
+   */
+  public int getRow() { return y; }
+  
+  /** 
+   * Method to get the column (x value)
+   * @return the column (x value) of the pixel 
+   */
+  public int getCol() { return x; }
   
   /**
    * Method to get the amount of alpha (transparency) at this pixel.
@@ -94,8 +108,8 @@ public class Pixel
     int value = picture.getBasicPixel(x,y);
 
     // get the red value (starts at 17 so shift right 16)
-    // then and it with all 1's for the first 8 bits to keep
-    // end up with from 0 to 255 
+    // then AND it with all 1's for the first 8 bits to 
+    // end up with a resulting value from 0 to 255 
     int red = (value >> 16) & 0xff;
     
     return red;
@@ -184,8 +198,8 @@ public class Pixel
     int value = picture.getBasicPixel(x,y);
 
     // get the red value (starts at 17 so shift right 16)
-    // then and it with all 1's for the first 8 bits to keep
-    // end up with from 0 to 255 
+    // then AND it with all 1's for the first 8 bits to 
+    // end up with a resulting value from 0 to 255 
     int red = (value >> 16) & 0xff;
     
     // get the green value (starts at 9 so shift right 8)
@@ -212,8 +226,6 @@ public class Pixel
     updatePicture(this.getAlpha(),red,green,blue);
   }
   
- 
-  
   /**
    * Method to update the picture based on the passed color
    * values for this pixel
@@ -232,9 +244,9 @@ public class Pixel
   }
   
   /**
-   * Method to correct a color value to be within 0 and 255
+   * Method to correct a color value to be within 0 to 255
    * @param the value to use
-   * @return a value within 0 and 255
+   * @return a value within 0 to 255
    */
   private static int correctValue(int value)
   {
@@ -346,7 +358,10 @@ public class Pixel
    */
   public String toString()
   {
-    return "Pixel red=" + getRed() + " green=" + getGreen() + 
+    return "Pixel row=" + getRow() + 
+      " col=" + getCol() +
+      " red=" + getRed() + 
+      " green=" + getGreen() + 
       " blue=" + getBlue();
   }
 

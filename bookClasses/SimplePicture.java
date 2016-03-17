@@ -10,9 +10,8 @@ import java.awt.geom.*;
  * an associated file name and a title.  A simple picture has pixels, 
  * width, and height.  A simple picture uses a BufferedImage to 
  * hold the pixels.  You can show a simple picture in a 
- * PictureFrame (a JFrame).
+ * PictureFrame (a JFrame).  You can also explore a simple picture.
  * 
- * Copyright Georgia Institute of Technology 2004
  * @author Barb Ericson ericson@cc.gatech.edu
  */
 public class SimplePicture implements DigitalPicture
@@ -49,7 +48,8 @@ public class SimplePicture implements DigitalPicture
  /////////////////////// Constructors /////////////////////////
  
  /**
-  * A Constructor that takes no arguments.  All fields will be null.
+  * A Constructor that takes no arguments.  It creates a picture with
+  * a width of 200 and a height of 100 that is all white.
   * A no-argument constructor must be given in order for a class to
   * be able to be subclassed.  By default all subclasses will implicitly
   * call this in their parent's no argument constructor unless a 
@@ -75,7 +75,7 @@ public class SimplePicture implements DigitalPicture
  /**
   * A constructor that takes the width and height desired for a picture and
   * creates a buffered image of that size.  This constructor doesn't 
-  * show the picture.
+  * show the picture.  The pixels will all be white.
   * @param width the desired width
   * @param height the desired height
   */
@@ -139,7 +139,7 @@ public class SimplePicture implements DigitalPicture
  
  /**
   * Method to get the extension for this picture
-  * @return the extendsion (jpg or bmp)
+  * @return the extendsion (jpg, bmp, giff, etc)
   */
  public String getExtension() { return extension; }
 
@@ -343,7 +343,23 @@ public class SimplePicture implements DigitalPicture
    return pixelArray;
  }
  
-
+ /**
+  * Method to get a two-dimensional array of Pixels for this simple picture
+  * @return a two-dimensional array of Pixel objects in row-major order.
+  */
+ public Pixel[][] getPixels2D()
+ {
+   int width = getWidth();
+   int height = getHeight();
+   Pixel[][] pixelArray = new Pixel[height][width];
+   
+   // loop through height rows from top to bottom
+   for (int row = 0; row < height; row++) 
+     for (int col = 0; col < width; col++) 
+       pixelArray[row][col] = new Pixel(this,col,row);
+    
+   return pixelArray;
+ }
  
  /**
   * Method to load the buffered image with the passed image
@@ -376,7 +392,7 @@ public class SimplePicture implements DigitalPicture
  }
  
  /**
-  * Method to hide the picture
+  * Method to hide the picture display
   */
  public void hide()
  {
@@ -397,7 +413,8 @@ public class SimplePicture implements DigitalPicture
  }
 
  /**
-  * Method to open a picture explorer on a copy of this simple picture
+  * Method to open a picture explorer on a copy (in memory) of this 
+  * simple picture
   */
  public void explore()
  {
@@ -406,8 +423,9 @@ public class SimplePicture implements DigitalPicture
  }
  
  /**
-  * Method to force the picture to redraw itself.  This is very
-  * useful after you have changed the pixels in a picture.
+  * Method to force the picture to repaint itself.  This is very
+  * useful after you have changed the pixels in a picture and
+  * you want to see the change.
   */
  public void repaint()
  {
@@ -423,6 +441,7 @@ public class SimplePicture implements DigitalPicture
  /**
   * Method to load the picture from the passed file name
   * @param fileName the file name to use to load the picture from
+  * @throws IOException if the picture isn't found
   */
  public void loadOrFail(String fileName) throws IOException
  {
@@ -456,8 +475,8 @@ public class SimplePicture implements DigitalPicture
 
 
  /**
-  * Method to write the contents of the picture to a file with 
-  * the passed name without throwing errors
+  * Method to read the contents of the picture from a filename  
+  * without throwing errors
   * @param fileName the name of the file to write the picture to
   * @return true if success else false
   */
@@ -477,7 +496,6 @@ public class SimplePicture implements DigitalPicture
          
  }
 
-
  /**
   * Method to load the picture from the passed file name
   * this just calls load(fileName) and is for name compatibility
@@ -487,7 +505,7 @@ public class SimplePicture implements DigitalPicture
  public boolean loadImage(String fileName)
  {
      return load(fileName);
-}
+ }
  
  /**
   * Method to draw a message as a string on the buffered image 
@@ -524,20 +542,20 @@ public class SimplePicture implements DigitalPicture
  
  /**
    * Method to create a new picture by scaling the current
-   * picture by the given x and y factors
-   * @param xFactor the amount to scale in x
-   * @param yFactor the amount to scale in y
+   * picture by the given 
+   * @param rFactor the amount to scale in the height (rows)
+   * @param cFactor the amount to scale in the width (columns)
    * @return the resulting picture
    */
-  public Picture scale(double xFactor, double yFactor)
+  public Picture scale(double rFactor, double cFactor)
   {
     // set up the scale tranform
     AffineTransform scaleTransform = new AffineTransform();
-    scaleTransform.scale(xFactor,yFactor);
+    scaleTransform.scale(cFactor,rFactor);
     
     // create a new picture object that is the right size
-    Picture result = new Picture((int) (getWidth() * xFactor),
-                                 (int) (getHeight() * yFactor));
+    Picture result = new Picture((int) (getHeight() * rFactor),
+                                 (int) (getWidth() * cFactor));
     
     // get the graphics 2d object to draw on the result
     Graphics graphics = result.getGraphics();
@@ -608,11 +626,18 @@ public class SimplePicture implements DigitalPicture
    
    // create the file object
    File file = new File(fileName);
-   File fileLoc = file.getParentFile();
+   File fileLoc = file.getParentFile(); // directory name
    
-   // canWrite is true only when the file exists already! (alexr)
+   // if there is no parent directory use the current media dir
+   if (fileLoc == null)
+   {
+     fileName = FileChooser.getMediaPath(fileName);
+     file = new File(fileName);
+     fileLoc = file.getParentFile(); 
+   }
+   
+   // check that you can write to the directory 
    if (!fileLoc.canWrite()) {
-       // System.err.println("can't write the file but trying anyway? ...");
         throw new IOException(fileName +
         " could not be opened. Check to see if you can write to the directory.");
    }
@@ -640,17 +665,10 @@ public class SimplePicture implements DigitalPicture
          return true;
      } catch (Exception ex) {
          System.out.println("There was an error trying to write " + fileName);
+         ex.printStackTrace();
          return false;
      }
          
- }
-
- /**
-  * Method to set the media path by setting the directory to use
-  * @param directory the directory to use for the media path
-  */
- public static void setMediaPath(String directory) { 
-   FileChooser.setMediaPath(directory);
  }
  
  /**
